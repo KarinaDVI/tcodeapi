@@ -13,7 +13,10 @@ public interface IClienteService {
 
     public Cliente findCliente(Long id_cliente);
 
-    public void editCliente(Long id_cliente, Long idNueva, String nuevoNombre, String nuevoApellido, String nuevoDni);
+    public void editCliente(Long id_cliente, Long idNueva, String nuevoNombre, 
+            String nuevoApellido, String nuevoDni, boolean borrado);
+
+    public void borradoLogicoCliente(Long id_cliente,boolean borrado);
 
     public void editCliente(Cliente clien); 
     

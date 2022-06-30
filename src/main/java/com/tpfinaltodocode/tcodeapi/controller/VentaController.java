@@ -37,11 +37,16 @@ public class VentaController {
  
     //alta
     @PostMapping("/crear")
-    public Venta altaVenta(@RequestBody Venta venta){
-        Venta ventaS;
+    public ResponseEntity<Venta> altaVenta(@RequestBody Venta venta){
         ventaServi.guardarVentas(venta);
-        ventaS=ventaServi.findVenta(venta.getCodigo_venta());
-        return ventaS;
+        if(ventaServi.findVenta(venta.getCodigo_venta())!= null){
+        return new ResponseEntity<>(ventaServi.findVenta(venta.getCodigo_venta()), 
+        HttpStatus.OK);
+        }
+        else{
+          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            
+        }
         
     }
     
@@ -72,6 +77,7 @@ public class VentaController {
         
     }
     
+    
     // Listar ventas
     @GetMapping()
     public List<VentaDto> traerVentaDto() {
@@ -95,6 +101,7 @@ public class VentaController {
                 pDto.setMarca(pOrig.getMarca());
                 pDto.setCosto(pOrig.getCosto());
                 pDto.setCantidad_disponible(pOrig.getCantidad_disponible());
+                pDto.setBorrado(pOrig.isBorrado());
                 listPdto.add(pDto);
             }
 
@@ -136,32 +143,6 @@ public class VentaController {
     }
     
     
-    // Modificar con ResponseEntity
-    @PutMapping("/editar_re/{codigo_venta}")
-    public ResponseEntity<Venta> actualizarVenta(@PathVariable Long codigo_venta, @RequestBody Venta venReq){
-        VentaDto vdto = this.obtenerUnaVenta(codigo_venta);
-        List<ProductoDto> pDtoList = vdto.getListaProductos();
-        List<Producto> pList=new ArrayList<>();
-        Venta venta = new Venta();
-        
-        for(ProductoDto p : pDtoList){
-        Producto prod = new Producto();
-        prod.setCodigo_producto(p.getCodigo_producto());
-        prod.setNombre(p.getNombre());
-        prod.setMarca(p.getMarca());
-        prod.setCosto(p.getCosto());
-        prod.setCantidad_disponible(p.getCantidad_disponible());
-        pList.add(prod);
-        }
-        venta.setCodigo_venta(vdto.getCodigo_venta());
-        venta.setFecha_venta(vdto.getFecha_venta());
-        venta.setListaProductos(pList);
-        venta.setUnCliente(vdto.getUnCliente());
-        ventaServi.editVenta(venta);
-
-        return new ResponseEntity<>(ventaServi.findVenta
-        (venta.getCodigo_venta()), HttpStatus.OK);
-    }
        
     // Eliminar
     @DeleteMapping("/eliminar/{codigo_venta}")
@@ -193,7 +174,7 @@ public class VentaController {
         return produList;
     }
     
-    /* 6. Obtener sumatoria del monto de ventas y cantidad total de ventas 
+    /* 6.1 Obtener sumatoria del monto de ventas y cantidad total de ventas 
     de un determinado dia  */
     
      @GetMapping("/fecha_ventas/{fecha_ventas}")
@@ -222,7 +203,7 @@ public class VentaController {
         
     }
     
-    // Mismo método que el 6 pero con String
+    // 6.2 Mismo método que el 6 pero con devolución con String
     
     @GetMapping("/fecha_ventas2/{fecha_ventas}")
     public String obtenerMontoFecha(@PathVariable String fecha_ventas){

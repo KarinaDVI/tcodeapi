@@ -2,10 +2,7 @@
 package com.tpfinaltodocode.tcodeapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tpfinaltodocode.tcodeapi.model.Cliente;
-import com.tpfinaltodocode.tcodeapi.model.Producto;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 

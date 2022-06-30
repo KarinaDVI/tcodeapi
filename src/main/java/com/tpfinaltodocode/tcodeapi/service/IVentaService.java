@@ -1,7 +1,6 @@
 
 package com.tpfinaltodocode.tcodeapi.service;
 
-import com.tpfinaltodocode.tcodeapi.dto.VentaDto;
 import com.tpfinaltodocode.tcodeapi.dto.VentaProductoDto;
 import com.tpfinaltodocode.tcodeapi.model.Cliente;
 import com.tpfinaltodocode.tcodeapi.model.Producto;

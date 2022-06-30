@@ -24,6 +24,7 @@ public class Producto {
     private String marca;
     private Double costo;
     private Double cantidad_disponible;
+    private boolean borrado;
     
    
 
@@ -34,14 +35,17 @@ public class Producto {
     public Producto() {
     }
 
-    public Producto(Long codigo_producto, String nombre, String marca, Double costo, Double cantidad_disponible, List<Venta> listaVentas) {
+    public Producto(Long codigo_producto, String nombre, String marca, Double costo, Double cantidad_disponible, boolean borrado, List<Venta> listaVentas) {
         this.codigo_producto = codigo_producto;
         this.nombre = nombre;
         this.marca = marca;
         this.costo = costo;
         this.cantidad_disponible = cantidad_disponible;
+        this.borrado = false;
         this.listaVentas = listaVentas;
     }
+
+    
 
     
 

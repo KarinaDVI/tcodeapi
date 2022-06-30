@@ -52,6 +52,7 @@ public class ProductoController {
            prodDto.setMarca(produ.getMarca());
            prodDto.setCosto(produ.getCosto());
            prodDto.setCantidad_disponible(produ.getCantidad_disponible());
+           prodDto.setBorrado(produ.isBorrado());
            listProdDto.add(prodDto);
         }
         return listProdDto;
@@ -70,7 +71,7 @@ public class ProductoController {
         prodDevuelto.setMarca(prodBuscado.getMarca());
         prodDevuelto.setCosto(prodBuscado.getCosto());
         prodDevuelto.setCantidad_disponible(prodBuscado.getCantidad_disponible());
- 
+        prodDevuelto.setBorrado(prodBuscado.isBorrado());
         return prodDevuelto;
     }
     
@@ -81,9 +82,11 @@ public class ProductoController {
             @RequestParam(required=false, name="nombre") String nuevoNombre,
             @RequestParam(required=false, name="marca") String nuevaMarca,
             @RequestParam(required=false, name="costo") Double nuevoCosto,
-            @RequestParam(required=false, name="nuevaCant_disponible") Double nuevaCant_disponible){
-        
-        produServi.editProducto(codigo_producto, codNuevo, nuevoNombre, nuevaMarca, nuevoCosto, nuevaCant_disponible);
+            @RequestParam(required=false, name="nuevaCant_disponible") Double nuevaCant_disponible,
+            @RequestParam(required=false, name="borrado") boolean borrado){
+            
+        produServi.editProducto(codigo_producto, codNuevo, nuevoNombre, 
+                nuevaMarca, nuevoCosto, nuevaCant_disponible, borrado);
         
         Producto produ= produServi.findProducto(codigo_producto);
         
@@ -102,7 +105,16 @@ public class ProductoController {
     public String eliminarProducto(@PathVariable Long codigo_producto){
         produServi.deleteProducto(codigo_producto);
         return "Borrado exitoso";
-    } 
+    }
+    
+    //Eliminado lógico de un producto por parametro codigo
+    @PutMapping("/eliminado_logico/{codigo_producto}")
+    public Producto borrarByIdProducto(@PathVariable Long codigo_producto,
+            @RequestParam(required=false, name="borrado") boolean borrado){
+        produServi.borradoLogicoProducto(codigo_producto,borrado);
+        Producto produ= produServi.findProducto(codigo_producto);
+        return produ;
+    }
 
 //***************************************************************************
     
@@ -118,20 +130,4 @@ public class ProductoController {
         return todos;
     }
  }   
-    //Métodos Deprecados
-    /*
-    
-    //Lista
-    @GetMapping("/productos")
-    public List<Producto>getProductos(){
-        return produServi.getProducto();
-    }
-
-    //Traer uno
-    @GetMapping("/productos/{codigo_producto}")
-    public Producto traerProducto(@PathVariable Long codigo_producto){
-        return produServi.findProducto(codigo_producto);
-    }
-    */  
-    
 

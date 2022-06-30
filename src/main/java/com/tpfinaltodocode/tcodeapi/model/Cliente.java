@@ -17,16 +17,20 @@ public class Cliente {
     private String nombre;
     private String apellido;
     private String dni;
+    private boolean borrado;
 
     public Cliente() {
     }
 
-    public Cliente(Long id_cliente, String nombre, String apellido, String dni) {
+    public Cliente(Long id_cliente, String nombre, String apellido, String dni, boolean borrado) {
         this.id_cliente = id_cliente;
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
+        this.borrado = false;
     }
+
+    
     
     
     

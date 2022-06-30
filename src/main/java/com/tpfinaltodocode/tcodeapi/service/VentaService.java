@@ -1,8 +1,6 @@
 
 package com.tpfinaltodocode.tcodeapi.service;
 
-import com.tpfinaltodocode.tcodeapi.dto.ProductoDto;
-import com.tpfinaltodocode.tcodeapi.dto.VentaDto;
 import com.tpfinaltodocode.tcodeapi.dto.VentaProductoDto;
 import com.tpfinaltodocode.tcodeapi.model.Cliente;
 import com.tpfinaltodocode.tcodeapi.model.Producto;
@@ -42,24 +40,38 @@ public class VentaService implements IVentaService{
         List<Producto> listaObte = new ArrayList<>();
         List<Double> listaCostos = new ArrayList<>();
         listaObte=venta.getListaProductos();
-           
+        List<Producto> listSave = new ArrayList<>();
+        //Predicate<Producto> borrado = p->p.isBorrado()==true;
+        //listaObte.removeIf(borrado);
+        
         for (Producto pSave: listaObte){
             Producto produ=produServi.findProducto(pSave.getCodigo_producto());
+            if((produ.isBorrado())==false){
             pSave.setCosto(produ.getCosto());
             pSave.setNombre(produ.getNombre());
             pSave.setMarca(produ.getMarca());
+            produServi.descontarStock(produ.getCodigo_producto(), produ.getCantidad_disponible());
             pSave.setCantidad_disponible(produ.getCantidad_disponible());
-            listaCostos.add(pSave.getCosto());
+            pSave.setBorrado(pSave.isBorrado());
             
+            listaCostos.add(pSave.getCosto());
+            listSave.add(pSave);
+            }else{
+                ventao=null;
+            }
         }
-        
-        ventao.setUnCliente(clien);
-        ventao.setFecha_venta(LocalDate.now());
-        ventao.setListaProductos(listaObte);
-        ventao.setTotal(totalCosto(listaCostos));
-        ventaRepo.save(ventao);
-        return ventao; 
-    }    
+        if((clien.isBorrado())==false){
+            ventao.setUnCliente(clien);
+            ventao.setFecha_venta(LocalDate.now());
+            ventao.setListaProductos(listSave);
+            ventao.setTotal(totalCosto(listaCostos));
+            ventaRepo.save(ventao);
+            return ventao; 
+        }else{
+            return ventao=null;
+        }
+     
+    }
     
     @Override
     public Double totalCosto(List<Double> listaCostos){
@@ -93,20 +105,11 @@ public class VentaService implements IVentaService{
         this.saveVentas(venta);  
     }
     
-    /*
-    @Override
-    public void editVenta(Venta ven) {
-        this.saveVentas(ven);
-    }
-*/
-    
     @Override
     public void editVenta(Venta ven) {
         this.guardarVentas(ven);
     }
     
-    
-
     @Override
     public List<VentaProductoDto> getVenProd() {
         List<Venta> listaVentas = new ArrayList<>();
