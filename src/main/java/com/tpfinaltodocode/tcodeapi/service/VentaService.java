@@ -107,7 +107,7 @@ public class VentaService implements IVentaService{
     
     @Override
     public void editVenta(Venta ven) {
-        this.guardarVentas(ven);
+        this.saveVentas(ven);
     }
     
     @Override
